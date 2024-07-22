@@ -10,6 +10,21 @@ const config = {
 
 const mysql = require('mysql2')
 const connection = mysql.createConnection(config)
+
+const createTableSql = `
+CREATE TABLE IF NOT EXISTS people (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+`;
+connection.query(createTableSql, (err, results, fields) => {
+    if (err) {
+        console.error('Erro ao criar a tabela `people`:', err);
+        return;
+    }
+    console.log('Tabela `people` criada com sucesso.');
+});
+
 const save = `INSERT INTO people(name) values('Migyael')`
 connection.query(save)
 
