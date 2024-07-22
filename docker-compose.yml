@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  node:
+    image: migyael/node:latest
+    container_name: node
+    build:
+      context: ./node
+    volumes:
+      - ./node:/usr/src/app
+    networks:
+      - mignet
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --innodb-use-native-aio=0
+    container_name: database
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nodedb
+      MYSQL_USER: migyael
+      MYSQL_PASSWORD: migyael
+
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - mignet
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - node
+    networks:
+      - mignet
+
+networks:
+  mignet:
+    driver: bridge
