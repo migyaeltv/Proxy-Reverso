@@ -15,4 +15,4 @@ RUN npm install express
 
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["dockerize", "-wait", "tcp://db:3306", "-timeout", "20s", "node", "index.js"]
